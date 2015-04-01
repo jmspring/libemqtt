@@ -28,7 +28,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <arpa/inet.h>
-#include <linux/tcp.h>
+#include <netinet/tcp.h>
 
 
 #define RCVBUFSIZE 1024

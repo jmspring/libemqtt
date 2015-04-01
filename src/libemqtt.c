@@ -243,27 +243,27 @@ int mqtt_connect(mqtt_broker_handle_t* broker)
 	};
 
 
-   	// Fixed header
-    uint8_t fixedHeaderSize = 2;    // Default size = one byte Message Type + one byte Remaining Length
-    uint8_t remainLen = sizeof(var_header)+payload_len;
-    if (remainLen > 127) {
-        fixedHeaderSize++;          // add an additional byte for Remaining Length
-    }
-    uint8_t fixed_header[fixedHeaderSize];
-    
-    // Message Type
-    fixed_header[0] = MQTT_MSG_CONNECT;
+  // Fixed header
+  uint8_t fixedHeaderSize = 2;    // Default size = one byte Message Type + one byte Remaining Length
+  uint8_t remainLen = sizeof(var_header)+payload_len;
+  if (remainLen > 127) {
+      fixedHeaderSize++;          // add an additional byte for Remaining Length
+  }
+  uint8_t fixed_header[fixedHeaderSize];
+  
+  // Message Type
+  fixed_header[0] = MQTT_MSG_CONNECT;
 
-    // Remaining Length
-    if (remainLen <= 127) {
-        fixed_header[1] = remainLen;
-    } else {
-        // first byte is remainder (mod) of 128, then set the MSB to indicate more bytes
-        fixed_header[1] = remainLen % 128;
-        fixed_header[1] = fixed_header[1] | 0x80;
-        // second byte is number of 128s
-        fixed_header[2] = remainLen / 128;
-    }
+  // Remaining Length
+  if (remainLen <= 127) {
+    fixed_header[1] = remainLen;
+  } else {
+    // first byte is remainder (mod) of 128, then set the MSB to indicate more bytes
+    fixed_header[1] = remainLen % 128;
+    fixed_header[1] = fixed_header[1] | 0x80;
+    // second byte is number of 128s
+    fixed_header[2] = remainLen / 128;
+  }
 
 	uint16_t offset = 0;
 	uint8_t packet[sizeof(fixed_header)+sizeof(var_header)+payload_len];
